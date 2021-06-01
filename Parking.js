@@ -11,11 +11,22 @@ function create_parking_lot(capacity = Prompt("enter the slot")) {
 }
 
 
-
+// create_parking_lot();
 //park a car
 
 
 const park = (carNumber = Prompt("enter the car number")) => {
-    let parkingSlots =
+    let parkingSlots = fs.readFileSync('input.txt', 'utf-8');
+    let Parked = parkingSlots.split('').forEach(element => {
+        if (!isNaN(element)) {
+            parkingSlots[element] = Number(element);
+        }
 
+    });
+
+
+    let emptySlots = parkingSlots.find(element => typeof(element) === Number);
 };
+
+
+console.log(park());
