@@ -5,19 +5,19 @@ const fs = require("fs");
 
 // // for creating a lot
 
-// const createLots = (capacity = Prompt("Enter number of slots")) => {
-//     var Obj = {
-//         "Slots": []
-//     };
-//     for (let counter = 0; counter < Number(capacity); counter++) {
-//         Obj.Slots.push("Empty");
-//     }
-//     console.log(`Created parking lot with ${counter+1} slots`);
-//     fs.writeFileSync("input.json", JSON.stringify(Obj));
-// };
+const createLots = (capacity = Prompt("Enter number of slots")) => {
+    var Obj = {
+        "Slots": []
+    };
+    for (let counter = 0; counter < Number(capacity); counter++) {
+        Obj.Slots.push("Empty");
+    }
+    console.log(`Created parking lot with ${capacity} slots`);
+    fs.writeFileSync("input.json", JSON.stringify(Obj));
+};
 
 
-// // createLots();
+
 
 
 
@@ -59,12 +59,12 @@ const leavePark = (carNumber = Prompt("Enter the car Number")) => {
     var index = -1;
     var found = Slots.Slots.find((e) => {
         index++;
-        return typeof(Slots.Slots[index]) === "object" && Slots.Slots[index].car.carNumber === carNumber;
+        return typeof(Slots.Slots[index]) === "object" && Slots.Slots[index].car.carNumber.trim() === carNumber.trim();
     });
 
     if (index >= 0 && typeof(found) !== "undefined") {
 
-        var time = new Date().getHours() - Number(Slots.Slots[0].car.parkingTime.slice(0, 3).trim());
+        var time = new Date().getHours() - Number(Slots.Slots[index].car.parkingTime.slice(0, 3).trim());
 
         console.log(`${Slots.Slots[index].car.carNumber} number with Slot Number${index+1} is free with Charge ${(time) <= 2 ? 20 : time * 10 } $`);
 
@@ -75,4 +75,35 @@ const leavePark = (carNumber = Prompt("Enter the car Number")) => {
         console.log("Please check your entered carNumber");
     }
 };
-leavePark();
+
+
+
+// leavePark();
+
+
+
+const status = () => {
+    const slots = JSON.parse(fs.readFileSync("input.json", "utf-8"));
+    var slotNumber = 1;
+
+    console.log("Slot No. Registation No.");
+    slots.Slots.forEach((e) => {
+        if (typeof(e) === 'object') {
+            console.log(`${slotNumber} ${e.car.carNumber.trim()}`);
+        } else {
+            console.log(`${slotNumber} is ${e}`);
+        }
+        slotNumber++;
+    });
+};
+
+
+// createLots();
+// carPark();
+// carPark();
+// carPark();
+// carPark();
+// carPark();
+// carPark();
+// leavePark();
+// status();
