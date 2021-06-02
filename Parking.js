@@ -27,9 +27,10 @@ const fs = require("fs");
 const carPark = (carNumber = Prompt("Enter the car number")) => {
     const slots = JSON.parse(fs.readFileSync("input.json", "utf-8"));
     var index = -1;
+
     if (typeof(slots.Slots.find(slot => {
             index++;
-            return slot === "Empty";
+            return slot === "Empty" || slot === "Leaved";
         })) !== "undefined") {
         var current = new Date();
 
@@ -44,7 +45,7 @@ const carPark = (carNumber = Prompt("Enter the car number")) => {
         console.log(`Allocated slot number: ${index+1}`);
 
     } else {
-        console.log("do not have empty parking slot here");
+        console.log("Sorry, parking lot is full");
     }
 };
 
@@ -56,22 +57,22 @@ const carPark = (carNumber = Prompt("Enter the car number")) => {
 const leavePark = (carNumber = Prompt("Enter the car Number")) => {
     const Slots = JSON.parse(fs.readFileSync("input.json", "utf-8"));
     var index = -1;
-    Slots.Slots.find((e) => {
+    var found = Slots.Slots.find((e) => {
         index++;
         return typeof(Slots.Slots[index]) === "object" && Slots.Slots[index].car.carNumber === carNumber;
     });
-    if (index >= 0) {
+
+    if (index >= 0 && typeof(found) !== "undefined") {
 
         var time = new Date().getHours() - Number(Slots.Slots[0].car.parkingTime.slice(0, 3).trim());
 
-        console.log(`${Slots.Slots[index].car.carNumber} number with Slot Number${index++} is free with Charge ${(time) <= 2 ? 20 : time * 10 } $`);
+        console.log(`${Slots.Slots[index].car.carNumber} number with Slot Number${index+1} is free with Charge ${(time) <= 2 ? 20 : time * 10 } $`);
 
         Slots.Slots[index] = "Leaved";
 
         fs.writeFileSync("input.json", JSON.stringify(Slots));
     } else {
-
         console.log("Please check your entered carNumber");
     }
 };
-// leavePark();
+leavePark();
