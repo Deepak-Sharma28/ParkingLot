@@ -40,7 +40,7 @@ const carPark = (carNumber = Prompt("Enter the car number")) => {
                 "leavingTime": ""
             }
         };
-        fs.writeFileSync(JSON.stringify(slots));
+        fs.writeFileSync("input.json", JSON.stringify(slots));
         console.log(slots);
 
     } else {
