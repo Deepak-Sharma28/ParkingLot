@@ -1,32 +1,51 @@
 const Prompt = require('prompt-sync')();
 const fs = require("fs");
 
-//for creating a parking lot
-function create_parking_lot(capacity = Prompt("enter the slot")) {
-    for (let counter = 1; counter <= Number(capacity); counter++) {
-        fs.appendFileSync('input.txt', counter);
-        console.log(counter);
+
+
+// for creating a lot
+
+const createLots = (capacity = Prompt("Enter number of slots")) => {
+    var Obj = {
+        "Slots": []
+    };
+    for (let counter = 0; counter < Number(capacity); counter++) {
+        Obj.Slots.push("Empty");
     }
-    return;
-}
-
-
-// create_parking_lot();
-//park a car
-
-
-const park = (carNumber = Prompt("enter the car number")) => {
-    let parkingSlots = fs.readFileSync('input.txt', 'utf-8');
-    let Parked = parkingSlots.split('').forEach(element => {
-        if (!isNaN(element)) {
-            parkingSlots[element] = Number(element);
-        }
-
-    });
-
-
-    let emptySlots = parkingSlots.find(element => typeof(element) === Number);
+    fs.writeFileSync("input.json", JSON.stringify(Obj));
 };
 
 
-console.log(park());
+// createLots();
+
+
+
+//for Parking a car
+
+
+const carPark = (carNumber = Prompt("Enter the car number")) => {
+    const slots = JSON.parse(fs.readFileSync("input.json", "utf-8"));
+
+
+    var index = -1;
+    if (typeof(slots.Slots.find(slot => {
+            index++;
+            return slot === "Empty";
+        })) !== "undefined") {
+
+        slots.Slots[index] = {
+            car: {
+                "carNumber": carNumber,
+                "parkingTime": new Date(),
+                "leavingTime": ""
+            }
+        };
+        fs.writeFileSync(JSON.stringify(slots));
+        console.log(slots);
+
+    } else {
+        return "do not have empty parking slot here";
+    }
+};
+
+carPark();
